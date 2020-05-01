@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <title>躲隕石</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 微軟正黑體;
+      background-image: url(./images/星球.jpg);
+      background-size: cover;
+      position: relative;
+    }
+
+    #game {
+      width: 800px;
+      height: 600px;
+      background: black;
+      /* 滑鼠像素不超過130px */
+      cursor: url(./images/airplane.png) 50 50, auto;
+      overflow: hidden;
+      border-radius: 10px;
+      position: relative;
+      background-image: url(./images/star.gif);
+      /* box-shadow: 0px 0px 10px white; */
+
+    }
+
+    #game>img {
+      position: absolute;
+      width: 100px;
+      height: 81px;
+      border-radius: 50%;
+      animation: imgs 1s ease;
+    }
+
+    /* @keyframes imgs {
+   0% {
+    transform: rotate(0deg);
+   }
+
+   50% {
+    transform: rotate(360deg);
+   }
+
+   100% {
+    transform: rotate(360deg);
+   }
+  } */
+
+    #btn-start {
+      font-family: 'Press Start 2P', cursive;
+      position: absolute;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 30px;
+    }
+
+    #menu {
+      position: absolute;
+      top: 1%;
+      right: 10%;
+      color: white;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 1%;
+      background-image: url(./images/太空人.png);
+      width: 197px;
+      height: 226px;
+      animation: photo 1s ease alternate infinite;
+    }
+
+    @keyframes photo {
+      0% {
+        transform: translateY(10px);
+      }
+
+      100% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game"></div>
+  <input type="button" value="GAME START" id="btn-start">
+  <div id="menu">
+    <p>時間：<span id="text-time">0</span>秒</p>
+  </div>
+  <!-- <div id="photo"></div> -->
+  <script src="jquery-3.5.0.min.js"></script>
+  <script>
+    // 計時時間
+    let timeleft = 0;
+    // 遊戲計時器
+    let gametimer = 0;
+    // 炸彈流水號
+    let bomb = 0;
+    let bomb2 = 0;
+
+    const rand = (num) => {
+      return Math.round(Math.random() * num)
+    }
+
+    // 開始遊戲按鈕動畫
+    $("#btn-start").ready(function () {
+      $("#btn-start").addClass('animated heartBeat');
+      $("#btn-start").css("animation-iteration-count", "infinite")
+      $("#btn-start").css({
+        top: 50 + "%",
+        left: 41 + "%"
+      })
+    })
+
+    //炸彈移動的位置
+    const movebo = (bomb) => {
+      $(`#bo${bomb}`).animate({
+        top: rand(80) + "%",
+        left: rand(80) + "%",
+        width: "200px",
+        height: "150px"
+      }, "fast", function () {
+        movebo(bomb);
+        $(this).fadeOut("fast")
+        setTimeout(() => {
+          $(this).remove()
+        }, 1000);
+      })
+    }
+
+    const moveboo = (bomb2) => {
+      $(`#boo${bomb2}`).animate({
+        top: rand(90) + "%",
+        left: rand(90) + "%",
+        width: "200px",
+        height: "150px"
+      }, 1000, function () {
+        moveboo(bomb2);
+        $(this).fadeOut(1000)
+        setTimeout(() => {
+          $(this).remove()
+        }, 1000);
+      })
+    }
+
+    $("#btn-start").click(function () {
+      // 淡入
+      $(this).fadeOut(1000, function () {
+        // 停用開始按鈕
+        $(this).attr("disabled", true)
+        timeleft = 0;
+        $("#text-time").text(timeleft);
+        // 遊戲計時
+        gametimer = setInterval(() => {
+          // 計時
+          timeleft++;
+          $("#text-time").text(timeleft);
+          // 生出炸彈
+          const num = rand(20)
+          if (num > 5) {
+            $("#game").append(`<img src="./images/外星人1.png" id="bo${bomb}" class="bomb">`);
+            $(`#bo${bomb}`).css({
+              // 炸彈的固定位置
+              top: 50 + "%",
+              left: 50 + "%"
+            })
+            movebo(bomb);
+            bomb++;
+          }
+
+          else {
+            $("#game").append(`<img src="./images/外星人2.png" id="boo${bomb2}" class="bomb2">`);
+            $(`#boo${bomb2}`).css({
+              top: 10 + "%",
+              left: 10 + "%"
+            })
+            moveboo(bomb2);
+            bomb2++;
+          }
+        }, 1000)
+      })
+
+
+
+      // 取game裡面的元素img，所以要用on
+      // 增加螢幕抖動功能
+      $("#game").on("mouseover", "img", function () {
+        // this 指 game 裡其中一個的 img
+        // $(this).attr("src", "./爆炸.png");
+        // $(this).stop();
+        // $(this).css("pointer-events", "none");
+        $("#game").addClass('animated wobble');
+        // 讓每次事件發生觸動
+        $("#game").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+          $("#game").removeClass('animated wobble');
+        })
+
+        $("#game img").remove()
+        clearInterval(gametimer);
+        timeleft = 0;
+        $("#text-time").text(timeleft);
+        // 按鈕淡出
+        $("#btn-start").fadeIn(1000, function () {
+          $(this).attr("disabled", false);
+        })
+      })
+
+    })
+  </script>
+</body>
+
+</html>
