@@ -45,19 +45,19 @@
       animation: imgs 1s ease;
     }
 
-    /* @keyframes imgs {
-   0% {
-    transform: rotate(0deg);
-   }
+    @keyframes imgs {
+      0% {
+        transform: rotate(-45deg) translateX(0px);
+      }
 
-   50% {
-    transform: rotate(360deg);
-   }
+      100% {
+        transform: rotate(0deg) translateX(50px);
+      }
 
-   100% {
-    transform: rotate(360deg);
-   }
-  } */
+      100% {
+        transform: rotate(45deg) translateX(-50px);
+      }
+    }
 
     #btn-start {
       font-family: 'Press Start 2P', cursive;
@@ -120,7 +120,7 @@
     }
 
     // 開始遊戲按鈕動畫
-    $("#btn-start").ready(function () {
+    $(document).ready(function () {
       $("#btn-start").addClass('animated heartBeat');
       $("#btn-start").css("animation-iteration-count", "infinite")
       $("#btn-start").css({
@@ -136,9 +136,9 @@
         left: rand(80) + "%",
         width: "200px",
         height: "150px"
-      }, "fast", function () {
+      }, 1000, function () {
         movebo(bomb);
-        $(this).fadeOut("fast")
+        $(this).fadeOut(2000)
         setTimeout(() => {
           $(this).remove()
         }, 1000);
@@ -173,27 +173,22 @@
           timeleft++;
           $("#text-time").text(timeleft);
           // 生出炸彈
-          const num = rand(20)
-          if (num > 5) {
-            $("#game").append(`<img src="./images/外星人1.png" id="bo${bomb}" class="bomb">`);
-            $(`#bo${bomb}`).css({
-              // 炸彈的固定位置
-              top: 50 + "%",
-              left: 50 + "%"
-            })
-            movebo(bomb);
-            bomb++;
-          }
+          $("#game").append(`<img src="./images/外星人1.png" id="bo${bomb}" class="bomb">`);
+          $(`#bo${bomb}`).css({
+            // 炸彈的固定位置
+            top: 50 + "%",
+            left: 50 + "%"
+          })
+          movebo(bomb);
+          bomb++;
 
-          else {
-            $("#game").append(`<img src="./images/外星人2.png" id="boo${bomb2}" class="bomb2">`);
-            $(`#boo${bomb2}`).css({
-              top: 10 + "%",
-              left: 10 + "%"
-            })
-            moveboo(bomb2);
-            bomb2++;
-          }
+          $("#game").append(`<img src="./images/外星人2.png" id="boo${bomb2}" class="bomb2">`);
+          $(`#boo${bomb2}`).css({
+            top: 10 + "%",
+            left: 10 + "%"
+          })
+          moveboo(bomb2);
+          bomb2++;
         }, 1000)
       })
 
@@ -221,6 +216,7 @@
           $(this).attr("disabled", false);
         })
       })
+
 
     })
   </script>
