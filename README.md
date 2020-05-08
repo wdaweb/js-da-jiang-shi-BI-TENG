@@ -1,2 +1,4 @@
-## 原本雲端的commit紀錄之網址
+### 原本雲端的commit紀錄之網址
 https://github.com/BI-TENG/-shooting-game/commits/master
+### 遊戲網址
+http://127.0.0.1:5500/%E6%89%93%E6%AE%AD%E5%B1%8D.html
